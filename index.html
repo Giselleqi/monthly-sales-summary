@@ -1,0 +1,12 @@
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Monthly Sales Report</title>
+<style>body{font-family:system-ui;max-width:760px;margin:2rem auto;padding:0 1rem}table{width:100%;border-collapse:collapse;margin-top:1rem}td,th{border-bottom:1px solid #eee;padding:.4rem;text-align:left}.bar{background:#4a7bd0;height:14px}</style></head>
+<body><h1>Monthly Sales Summary</h1><p>Upload a CSV with columns: <code>date,product,amount</code>, or use the sample.</p>
+<input type="file" id="f" accept=".csv"> <button id="s">Use sample data</button><div id="out"></div>
+<script>
+const sample="date,product,amount\n2026-10-03,Laptop,1200\n2026-10-11,Phone,800\n2026-10-15,Laptop,1100\n2026-11-02,Tablet,500\n2026-11-09,Phone,900\n2026-11-20,Laptop,1300";
+function run(t){const rows=t.trim().split(/\r?\n/).slice(1).map(l=>l.split(","));const m={};
+rows.forEach(([d,p,a])=>{const k=d.slice(0,7)+" | "+p;m[k]=(m[k]||0)+Number(a)});
+const max=Math.max(...Object.values(m));
+out.innerHTML="<table><tr><th>Month | Product</th><th>Total</th><th></th></tr>"+Object.entries(m).sort().map(([k,v])=>`<tr><td>${k}</td><td>$${v.toLocaleString()}</td><td style="width:40%"><div class="bar" style="width:${v/max*100}%"></div></td></tr>`).join("")+"</table>";}
+s.onclick=()=>run(sample);f.onchange=e=>e.target.files[0].text().then(run);run(sample);
+</script></body></html>
